@@ -1,75 +1,15 @@
 # An interactive hangman game you can play from the console
 import random
+from os import system
+from hangman_art import logo, stages
+from hangman_words import word_list
 
-# Hangman stages
-stages = ['''
-  +---+
-  |   |
-  O   |
- /|\  |
- / \  |
-      |
-=========
-''', '''
-  +---+
-  |   |
-  O   |
- /|\  |
- /    |
-      |
-=========
-''', '''
-  +---+
-  |   |
-  O   |
- /|\  |
-      |
-      |
-=========
-''', '''
-  +---+
-  |   |
-  O   |
- /|   |
-      |
-      |
-=========''', '''
-  +---+
-  |   |
-  O   |
-  |   |
-      |
-      |
-=========
-''', '''
-  +---+
-  |   |
-  O   |
-      |
-      |
-      |
-=========
-''', '''
-  +---+
-  |   |
-      |
-      |
-      |
-      |
-=========
-''']
-
-# List of random words
-word_list = ["mustache", "giraffe", "car"]
+print(logo)
 
 # Choose a random word for the user to guess
 chosen_word = random.choice(word_list)
 chosen_word_len = len(chosen_word)
-
 lives = 6
-
-# Testing code
-print(f'Pssst, the solution is {chosen_word}.')
 
 # Display the blank & guessed letters
 display = ['_' for _ in range(chosen_word_len)]
@@ -79,7 +19,14 @@ def guess():
     # Make python know that lives is reffering to the global 'lives' variable instead of the local scope
     global lives
     # Fill in the blanks
-    guess = input("Guess a letter: ").lower()
+    guess = input("\nGuess a letter: ").lower()
+
+    # Clear the previous console output
+    system('clear')
+
+    if guess in display:
+        print(f"You already guessed '{guess}'")
+
     for index in range(chosen_word_len):
         letter = chosen_word[index]
         if guess == letter:
@@ -87,6 +34,10 @@ def guess():
 
     if guess not in chosen_word:
         lives -= 1
+        print(
+            f"You guessed '{guess}', that's not in the word. You lose a life.")
+
+    print("\n")
     print(" ".join(display))
     print(stages[lives])
 
@@ -111,4 +62,4 @@ while not game_ended():
 if has_won():
     print("You win!")
 else:
-    print("You lose.")
+    print(f"You lose. The word was '{chosen_word}'")
